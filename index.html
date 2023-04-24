@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Password Generator</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=source-sans-pro:700" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-weight: 700;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .flex {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            margin: 0 auto;
+            height: 100vh;
+            background: url(https://images.unsplash.com/photo-1667453466805-75bbf36e8707?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .tool__box {
+            height: 50vh;
+            padding: 5rem 1rem;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 0 0 1px 100rem rgba(114, 112, 255, 0.1);
+        }
+
+        .title {
+            margin-bottom: 0.75rem;
+            font-size: 2rem;
+        }
+
+        .password {
+            margin-bottom: 0.7rem;
+            padding: 0.3rem;
+            width: 100%;
+            outline: none;
+            border: 2px solid;
+            border-radius: 0.3rem;
+            height: 2rem;
+            font-size: 1.25rem;
+        }
+
+        .buttons {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 0.5rem 0.8rem;
+            border: none;
+            border-radius: 0.3rem;
+            cursor: pointer;
+        }
+
+        .primary-bg {
+            background: #0059ff44;
+        }
+
+        .secondary-bg {
+            background: #ff006244;
+        }
+
+        .password::selection {
+            color: #000;
+            background: #0059ff44;
+        }
+    </style>
+</head>
+<body>
+    <div class="container flex">
+        <div class="tool__box flex">
+            <h2 class="title">Random Password</h2>
+            <input
+            class="password"
+            type="text"
+            name="password"
+            id="password"
+            readonly
+            value="">
+            <div class="buttons">
+                <button onclick="copytoClipboard()" class="btn primary-bg">Copy</button>
+                <button onclick="generatePass()" class="btn secondary-bg">Re-generate</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passwordField = document.getElementById('password');
+        const passwordChars = '0123789ABCD()*+EFGHIJK456LMNOPQRSTUVWXYZ!"#$%&\',-./:;<=_`{}~abcdefghijklmno>?@[]^pqrstuvwxyz';
+        
+        const passwordLen = 12;
+
+        const generatePass = () => {
+            const RandomNums = new Uint32Array(passwordChars.length);
+            crypto.getRandomValues(RandomNums);
+        
+            let finalPassword = ''
+            for (let i = 0; i < passwordLen; i++) {
+                finalPassword += passwordChars[RandomNums[i] % passwordChars.length];
+                
+            }
+
+            passwordField.value = finalPassword;
+            passwordField.select();
+        }
+
+        const copytoClipboard = () => {
+            passwordField.select();
+
+            navigator.clipboard.writeText(passwordField.value).then(() => {},
+                () => {
+                    // clipboard write failed
+                    // Using `execCommand` as an alternative
+                    document.execCommand('copy');
+                }
+            );
+
+        }
+
+        window.onload = generatePass();
+
+    </script>
+</body>
+</html>
